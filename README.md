@@ -12,10 +12,12 @@ Generate a 100 byte file from a seed with one line:
 ```python
 import RandomIO
 
-path = RandomIO.RandomIO('seed string').genfile(100)
-print(path)
+path = RandomIO.RandomIO('seed string').genfile(50)
+with open(path,'rb') as f:
+	print(f.read())
 
-# 'd719a1840dda1478e0518d67d7f0c0ec'
+# b"\x0b\x04\x1f\xb9I\x18Y\xc8\\\xe5,\xfc\x94\xd6\xf5(\xcb\xd9k\xb3M>\xe9\xc8R
+    \xa1\xb2\xdc\xba\\g\x0f3\xbcR\x93\xedeZ;\xfc\xa1\xfb\x85%\x8e'\xbb\x0b\xc2"
 ```
 
 It is possible to specify the directory to generate the file in, or the file name
