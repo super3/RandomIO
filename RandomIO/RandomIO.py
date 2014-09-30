@@ -30,12 +30,14 @@ from binascii import hexlify
 
 
 class RandomIO(object):
-    def __init__(self, seed=os.urandom(32)):
+    def __init__(self, seed=None):
         """Initialization method
 
         :param seed: an object to use as the seed for the random number,
         generation.  should be hashable object
         """
+        if (seed is None):
+            seed = os.urandom(32)
         try:
             key = SHA256.new(seed).digest()
         except TypeError:
