@@ -75,4 +75,11 @@ with open('path/to/file','rb') as f:
 # b'\xec\xf4C\xeb\x1d\rU%\xca\xae'
 ```
 
+### Performance
 
+```
+> python -m timeit -p -s 'import RandomIO, os' 'path=RandomIO.RandomIO().genfile(100000000);os.remove(path)'
+10 loops, best of 3: 1.4 sec per loop
+```
+
+From a simple timeit analysis on a 2.4 GHz PC it can generate files at around 70 MB/s.
