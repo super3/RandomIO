@@ -5,6 +5,14 @@ RandomIO
 
 `RandomIO` provides a readable interface for cryptographic quality random bytes.  It also allows generation of random files, dumping random bytes to files, and a `.read()` method for reading bytes.
 
+### Installation
+
+```
+git clone https://github.com/wiggzz/RandomIO
+cd RandomIO
+pip install .
+```
+
 ### File generation
 
 Generate a 50 byte file from a seed with one line:
