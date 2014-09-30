@@ -24,8 +24,8 @@ path = RandomIO.RandomIO('seed string').genfile(50)
 with open(path,'rb') as f:
 	print(f.read())
 
-# b"\x0b\x04\x1f\xb9I\x18Y\xc8\\\xe5,\xfc\x94\xd6\xf5(\xcb\xd9k\xb3M>\xe9\xc8R
-#   \xa1\xb2\xdc\xba\\g\x0f3\xbcR\x93\xedeZ;\xfc\xa1\xfb\x85%\x8e'\xbb\x0b\xc2"
+# b"\xec\xf4C\xeb\x1d\rU%\xca\xae\xa4^=*in\x90y\x12\x86\xce\xe5N\xce-\x16
+#   \xc8r\x83sh\xdfp\xb7\xbb\xc2\x04\x11\xda)\xc1*_\x01\xe5\xd8\x0f}N0"
 ```
 
 It is possible to specify the directory to generate the file in, or the file name
@@ -62,7 +62,7 @@ print(s.read(10))
 s = RandomIO.RandomIO('seed string')
 print(s.read(10))
 
-# b'\xc7\x15\xce7n\xaa\x8ca]u'
+# b'\xec\xf4C\xeb\x1d\rU%\xca\xae'
 
 # dump the bytes into a file object
 s = RandomIO.RandomIO('seed string')
@@ -72,7 +72,7 @@ with open('path/to/file','wb') as f:
 with open('path/to/file','rb') as f:
 	print(f.read())
 	
-# b'\xc7\x15\xce7n\xaa\x8ca]u'
+# b'\xec\xf4C\xeb\x1d\rU%\xca\xae'
 ```
 
 

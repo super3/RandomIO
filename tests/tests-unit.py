@@ -52,6 +52,23 @@ class TestRandomIO(unittest.TestCase):
         self.assertEqual(s1.read(100),s2.read(100))
         self.assertNotEqual(s3.read(100),s4.read(100))
         
+    def test_crossplatform(self):
+        string_seed1 = b'\t\xb0\xef\xd9\x05p\xe1W\x17\x8a9\xc6!;^6\x1d\xadj\
+\xb4#n\x1d/\x12+\xe6\xb1\x80\xc86\x06I\xc4!\x8b39\x84E\x1d\x14\xdf\x14e\x12\
+\xfa\xf0\r\x1b'
+
+        s = RandomIO.RandomIO('seed1').read(50)
+
+        self.assertEqual(s,string_seed1)
+        
+        string_123456 = b'\x18\xb2\xce\x8a \xc9\xe2n\xd9\xf6\x06\x0b8\xf9\xb9\
+\xf8\x9b#81z\xf8\x02\x83\x1e\xa2\xf02\x7f\xad\xd7*h\xad9\xf6\x14U\xca\x90\\i\
+\xcc~#h\xaa\xb4\x1b['
+
+        s = RandomIO.RandomIO(123456).read(50)
+        
+        self.assertEqual(s,string_123456)
+        
     def test_read(self):
         s1 = RandomIO.RandomIO('seed string')
         
