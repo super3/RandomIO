@@ -39,7 +39,7 @@ class RandomIO(object):
         try:
             key = SHA256.new(seed).digest()
         except TypeError:
-            key = SHA256.new(str(hash(seed)).encode()).digest()
+            key = SHA256.new(str(seed).encode()).digest()
         self.aes = AES.new(key, AES.MODE_CTR, counter=Counter.new(128))
         self.bufsz = 65536
 
