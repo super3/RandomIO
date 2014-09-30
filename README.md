@@ -1,6 +1,8 @@
 RandomIO
 ===============
 
+[![Build Status](https://travis-ci.org/wiggzz/RandomIO.svg)](https://travis-ci.org/wiggzz/RandomIO) [![Coverage Status](https://img.shields.io/coveralls/wiggzz/RandomIO.svg)](https://coveralls.io/r/wiggzz/RandomIO?branch=master)
+
 `RandomIO` provides a readable interface for cryptographic quality random bytes.  It also allows generation of random files, dumping random bytes to files, and a `.read()` method for reading bytes.
 
 ### File generation
