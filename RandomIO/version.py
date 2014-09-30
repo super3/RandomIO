@@ -21,21 +21,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-from setuptools import setup
-
-from RandomIO.version import __version__
-
-setup(
-    name='RandomIO',
-    version=__version__,
-    packages=['RandomIO'],
-    url='https://github.com/Storj/RandomIO',
-    license='MIT',
-    author='William James, Storj Labs',
-    author_email='info@storj.io',
-    description='Random file and byte string generator',
-    install_requires=[
-        'pycrypto >= 2.6.1',
-    ]
-)
+__version__ = "0.1.0"

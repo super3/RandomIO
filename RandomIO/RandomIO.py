@@ -21,11 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto.Util import Counter
 from binascii import hexlify
-import os
 
 
 class RandomIO(object):
@@ -76,6 +77,8 @@ class RandomIO(object):
 
         If no path is generated, the file will be generated in the current
         directory
+        
+        Returns the path of the file
 
         :param size: the number of bytes to dump
         :param path: the file path, or directory
