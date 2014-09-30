@@ -46,13 +46,13 @@ Also allows reading random bytes and dumping those bytes to a file object.
 import RandomIO
 
 s = RandomIO.RandomIO()
-print(s.read(100))
+print(s.read(10))
 
 # b'\x8bfT\x9c\x06_)\xa2,\xd0'
 
 # or generate seeded random bytes
 s = RandomIO.RandomIO('seed string')
-print(s.read(100))
+print(s.read(10))
 
 # b'\xc7\x15\xce7n\xaa\x8ca]u'
 
