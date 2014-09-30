@@ -24,7 +24,8 @@
 import sys
 from setuptools import setup
 
-from RandomIO.version import __version__
+with open('RandomIO/version.py','r') as f:
+    exec(f.read())
 
 setup(
     name='RandomIO',
