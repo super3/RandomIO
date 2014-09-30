@@ -33,8 +33,8 @@ class RandomIO(object):
     def __init__(self, seed=os.urandom(32)):
         """Initialization method
 
-        :param seed: an object to use as the seed for the random number, should be hashable object
-        generation
+        :param seed: an object to use as the seed for the random number,
+        generation.  should be hashable object
         """
         try:
             key = SHA256.new(seed).digest()
@@ -77,7 +77,7 @@ class RandomIO(object):
 
         If no path is generated, the file will be generated in the current
         directory
-        
+
         Returns the path of the file
 
         :param size: the number of bytes to dump
