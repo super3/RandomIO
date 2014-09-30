@@ -7,7 +7,7 @@ RandomIO
 
 ### File generation
 
-Generate a 100 byte file from a seed with one line:
+Generate a 50 byte file from a seed with one line:
 
 ```python
 import RandomIO
