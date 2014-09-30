@@ -1,0 +1,19 @@
+---
+  language: python
+  python:
+    - "2.7"
+    - "3.3"
+    - "3.4"
+  # command to install dependencies
+  install:
+    - "pip install coverage flake8 coveralls ."
+  after_success:
+    - coveralls
+
+  # command to run tests
+  script:
+    - flake8 RandomIO/
+    - nosetests -v --with-coverage --cover-package=RandomIO tests/
+
+#  notifications:
+#    slack: storj:IwoHonDxA5lauvwcKZRMkfps
