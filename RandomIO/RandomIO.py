@@ -86,10 +86,8 @@ class RandomIO(object):
         :param path: the file path, or directory
         :returns: the file path
         """
-        (head, tail) = os.path.split(path)
-        if (len(tail) == 0):
-            tail = hexlify(os.urandom(16)).decode('utf-8')
-        path = os.path.join(head, tail)
+        if (os.path.isdir(path) or len(path) == 0):
+            path = os.path.join(path, hexlify(os.urandom(16)).decode('utf-8'))
 
         with open(path, 'wb') as f:
             self.dump(size, f)
