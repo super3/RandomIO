@@ -1,7 +1,7 @@
 RandomIO
 ===============
 
-[![Build Status](https://travis-ci.org/storj/RandomIO.svg)](https://travis-ci.org/storj/RandomIO) [![Coverage Status](https://img.shields.io/coveralls/storj/RandomIO.svg)](https://coveralls.io/r/storj/RandomIO?branch=master)
+[![Build Status](https://travis-ci.org/Storj/RandomIO.svg)](https://travis-ci.org/Storj/RandomIO) [![Coverage Status](https://img.shields.io/coveralls/Storj/RandomIO.svg)](https://coveralls.io/r/Storj/RandomIO?branch=master)
 
 `RandomIO` provides a readable interface for cryptographic quality random bytes.  It also allows generation of random files, dumping random bytes to files, and a `.read()` method for reading bytes.
 
