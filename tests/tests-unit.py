@@ -180,5 +180,7 @@ class TestRandomIO(unittest.TestCase):
                 RandomIO.RandomIO(seed).read(size)).hexdigest()
             self.assertEqual(r.get(hexseed), testhash)
 
+        r.flushall()
+
 if __name__ == '__main__':
     unittest.main()
