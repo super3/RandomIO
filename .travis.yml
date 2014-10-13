@@ -16,6 +16,6 @@
   script:
     - flake8 RandomIO/
     - nosetests -v --with-coverage --cover-package=RandomIO tests/
-
-#  notifications:
-#    slack: storj:IwoHonDxA5lauvwcKZRMkfps
+  # slack notification
+  notifications:
+    slack: storj:FnNNz3pWsGOc3bW65GmBSwCd
