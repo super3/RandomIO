@@ -23,6 +23,9 @@
 
 import unittest
 import os
+import redis
+import hashlib
+import subprocess
 
 import RandomIO
 
@@ -147,6 +150,35 @@ class TestRandomIO(unittest.TestCase):
         os.remove(file1)
         os.remove(file2)
 
+    def test_iotools_txt(self):
+        output = 'txt_test.out'
+        size = 10485760
+        subprocess.call(
+            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output])
+
+        with open(output, 'r') as pairsfile:
+            for line in pairsfile:
+                (hexseed, hash) = line.split(' ')
+                seed = hexseed.decode('hex')
+                testhash = hashlib.sha256(
+                    RandomIO.RandomIO(seed).read(size)).hexdigest()
+                self.assertEqual(hash, testhash)
+        os.remove(output)
+
+    def test_iotools_redis(self):
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        output = 'redis_test.out'
+        size = 10485760
+        subprocess.call(
+            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output, '--redis'])
+        subprocess.call(
+            'cat {0} | redis-cli --pipe'.format(output), shell=True)
+
+        for hexseed in r.scan_iter():
+            seed = hexseed.decode('hex')
+            testhash = hashlib.sha256(
+                RandomIO.RandomIO(seed).read(size)).hexdigest()
+            self.assertEqual(r.get(hexseed), testhash)
 
 if __name__ == '__main__':
     unittest.main()
