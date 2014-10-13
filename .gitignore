@@ -54,3 +54,6 @@ target/
 
 # PyCharm/Intellij
 .idea
+
+# Miscellaneous
+.DS_Store
