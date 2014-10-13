@@ -8,7 +8,7 @@ RandomIO
 ### Installation
 
 ```
-git clone https://github.com/wiggzz/RandomIO
+git clone https://github.com/storj/RandomIO
 cd RandomIO
 pip install .
 ```
