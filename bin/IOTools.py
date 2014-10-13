@@ -58,7 +58,7 @@ Currently available commands include:
                 return "%3.1f%s" % (num, x)
             num /= 1024.0
 
-    def _genredis(seed, hash):
+    def _genredis(self, seed, hash):
         """Utility method for writing to Redis protocol for mass key-value insertion.
 
         :param seed: hex-encoded file seed string to act as key
