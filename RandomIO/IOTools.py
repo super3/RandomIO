@@ -49,11 +49,15 @@ Currently available commands include:
         getattr(self, args.command)()
 
     def sizeformat(self, num):
-    	"""Utility method for printing byte sizes with easier-to-read units."""
-    	for x in ['bytes','KB','MB','GB']:
-    		if abs(num) < 1024.0:
-    			return "%3.1f%s" % (num, x)
-    		num /= 1024.0
+        """Utility method for printing byte sizes with easier-to-read units.
+
+        :param num: integer byte number
+        :returns: human-readable string of byte input converted to KB, MB or GB
+        """
+        for x in ['bytes', 'KB', 'MB', 'GB']:
+            if abs(num) < 1024.0:
+                return "%3.1f%s" % (num, x)
+            num /= 1024.0
 
     def pairgen(self):
         parser = argparse.ArgumentParser(description='Output a series of seed-hash pairs for files generated in memory using the RandomIO library.',
