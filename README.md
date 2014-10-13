@@ -75,6 +75,68 @@ with open('path/to/file','rb') as f:
 # b'\xec\xf4C\xeb\x1d\rU%\xca\xae'
 ```
 
+### CLI Tools
+
+RandomIO also includes a small set of CLI tools in IOTools.py
+```
+$python IOTools.py --help
+usage: python IOTools.py <command> [<args>]
+
+Currently available commands include:
+   pairgen       Outputs a series of seed-hash pairs for files generated using the RandomIO library.
+
+A series of command-line tools that make use of the RandomIO library.
+
+positional arguments:
+  command     Command to run.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+Currently, `pairgen` is the only available tool:
+```
+$ python IOTools.py pairgen --help
+usage: IOTools.py [-h] [-l LENGTH] [-p PAIRS] [-o OUTPUT] [-v] size
+
+Output a series of seed-hash pairs for files generated in memory using the
+RandomIO library.
+
+positional arguments:
+  size                  The target size of each file generated and hashed (in
+                        bytes).
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l LENGTH, --length LENGTH
+                        The length of the random seed string to use.
+  -p PAIRS, --pairs PAIRS
+                        The number of seed-hash pairs to generate.
+  -o OUTPUT, --output OUTPUT
+                        The name of the file you wish to write pairs to.
+  -v, --verbose         Increase output verbosity.
+
+This tool can be used to pre-generate seed-hash pairs for the Storj uptick
+service.
+```
+
+Example output of `pairgens`:
+```
+$ python IOTools.py pairgen 100000000 -p5 -l 10 -o mypairs.txt -v
+Pair 0: Generating hash for 95.4MB file with seed 6a95c93fa9ca92d249d2...
+done!
+Pair 1: Generating hash for 95.4MB file with seed 7b31909908ff413061ce...
+done!
+Pair 2: Generating hash for 95.4MB file with seed a440bcd97af94701282c...
+done!
+Pair 3: Generating hash for 95.4MB file with seed 0f1f9dad1d6da7e03367...
+done!
+Pair 4: Generating hash for 95.4MB file with seed f146dbbe9c1706e1c3d6...
+done!
+```
+
+Note that files are generated and hashed in memory. In addition, seeds displayed and/or written to file are hex-encoded. Actual seeds must be decoded before generating hash.
+
 ### Performance
 
 ```
