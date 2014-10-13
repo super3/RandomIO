@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #
 # The MIT License (MIT)
 #
@@ -21,9 +23,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# add verbosity option (0 no output, 1 --> Pair X: generating hash for X MB file with seed 'whatever' ... done)
-# Example: ./IOTools.py --help, ./IOTools.py pairgen --help
-
 import os
 import sys
 import argparse
@@ -36,7 +35,7 @@ class IOTools(object):
     def __init__(self):
         """Initialization of top-level IO Tools menu."""
         parser = argparse.ArgumentParser(
-            description='A series of command-line tools that make use of the RandomIO library.', usage='''python IOTools.py <command> [<args>]
+            description='A series of command-line tools that make use of the RandomIO library.', usage='''IOTools.py <command> [<args>]
 
 Currently available commands include:
    pairgen       Outputs a series of seed-hash pairs for files generated using the RandomIO library.''')
