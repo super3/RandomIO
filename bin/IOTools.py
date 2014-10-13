@@ -58,6 +58,15 @@ Currently available commands include:
                 return "%3.1f%s" % (num, x)
             num /= 1024.0
 
+    def _genredis(seed, hash):
+        """Utility method for writing to Redis protocol for mass key-value insertion.
+
+        :param seed: hex-encoded file seed string to act as key
+        :param hash: hash for file generated from seed
+        :returns: Redis protocol for `SET key value` command
+        """
+        return '*3\r\n$3\r\nSET\r\n${0}\r\n{1}\r\n${2}\r\n{3}\r\n'.format(len(seed), seed, len(hash), hash)
+
     def pairgen(self):
         parser = argparse.ArgumentParser(description='Output a series of seed-hash pairs for files generated in memory using the RandomIO library.',
                                          epilog='This tool can be used to pre-generate seed-hash pairs for the Storj uptick service.')
@@ -69,6 +78,8 @@ Currently available commands include:
             '-p', '--pairs', type=int, help='The number of seed-hash pairs to generate.', action='store', default=1)
         parser.add_argument(
             '-o', '--output', type=str, help='The name of the file you wish to write pairs to.', action='store', default='pairs.out')
+        parser.add_argument(
+            '-r', '--redis', action='store_true', help='Write to file using Redis protocol.')
         parser.add_argument(
             '-v', '--verbose', action='store_true', help='Increase output verbosity.')
         args = parser.parse_args(sys.argv[2:])
@@ -83,7 +94,10 @@ Currently available commands include:
                         i, filesize, hexseed))
                 hash = hashlib.sha256(
                     RandomIO.RandomIO(seed).read(args.size)).hexdigest()
-                f.write('{0} {1}\n'.format(hexseed, hash))
+                if (args.redis):
+                    f.write(self._genredis(hexseed, hash))
+                else:
+                    f.write('{0} {1}\n'.format(hexseed, hash))
                 if (args.verbose):
                     print('done!')
 
