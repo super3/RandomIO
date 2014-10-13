@@ -137,6 +137,10 @@ done!
 
 Note that files are generated and hashed in memory. In addition, seeds displayed and/or written to file are hex-encoded. Actual seeds must be decoded before generating hash.
 
+When writing pairs to file using Redis mass insertion format, you can use the following command to import your pairs to Redis:
+
+`cat pairs.out | redis-cli --pipe`
+
 ### Performance
 
 ```
