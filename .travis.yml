@@ -5,8 +5,10 @@
     - "3.3"
     - "3.4"
   # command to install dependencies
+  services:
+    - redis-server
   install:
-    - "pip install coverage flake8 coveralls ."
+    - "pip install coverage flake8 redis coveralls ."
   after_success:
     - coveralls
 
