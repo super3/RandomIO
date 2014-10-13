@@ -114,6 +114,7 @@ optional arguments:
                         The number of seed-hash pairs to generate.
   -o OUTPUT, --output OUTPUT
                         The name of the file you wish to write pairs to.
+  -r, --redis           Write to file using Redis protocol.
   -v, --verbose         Increase output verbosity.
 
 This tool can be used to pre-generate seed-hash pairs for the Storj uptick
