@@ -47,7 +47,7 @@ Currently available commands include:
             exit(1)
         getattr(self, args.command)()
 
-    def sizeformat(self, num):
+    def _sizeformat(self, num):
         """Utility method for printing byte sizes with easier-to-read units.
 
         :param num: integer byte number
@@ -78,7 +78,7 @@ Currently available commands include:
                 seed = os.urandom(args.length or 12)
                 hexseed = seed.encode('hex')
                 if (args.verbose):
-                    filesize = self.sizeformat(args.size)
+                    filesize = self._sizeformat(args.size)
                     print('Pair {0}: Generating hash for {1} file with seed {2}...'.format(
                         i, filesize, hexseed))
                 hash = hashlib.sha256(
