@@ -179,7 +179,7 @@ class TestRandomIO(unittest.TestCase):
             testhash = hashlib.sha256(
                 RandomIO.RandomIO(seed).read(size)).hexdigest()
             self.assertEqual(r.get(hexseed), testhash)
-
+        os.remove(output)
         r.flushall()
 
 if __name__ == '__main__':
