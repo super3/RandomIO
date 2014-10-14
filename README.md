@@ -80,7 +80,7 @@ with open('path/to/file','rb') as f:
 RandomIO also includes a small set of CLI tools in IOTools.py
 ```
 $python IOTools.py --help
-usage: python IOTools.py <command> [<args>]
+usage: IOTools.py <command> [<args>]
 
 Currently available commands include:
    pairgen       Outputs a series of seed-hash pairs for files generated using the RandomIO library.
@@ -96,7 +96,7 @@ optional arguments:
 
 Currently, `pairgen` is the only available tool:
 ```
-$ python IOTools.py pairgen --help
+$ IOTools.py pairgen --help
 usage: IOTools.py [-h] [-l LENGTH] [-p PAIRS] [-o OUTPUT] [-v] size
 
 Output a series of seed-hash pairs for files generated in memory using the
@@ -123,7 +123,7 @@ service.
 
 Example output of `pairgens`:
 ```
-$ python IOTools.py pairgen 100000000 -p5 -l 10 -o mypairs.txt -v
+$ IOTools.py pairgen 100000000 -p5 -l 10 -o mypairs.txt -v
 Pair 0: Generating hash for 95.4MB file with seed 6a95c93fa9ca92d249d2...
 done!
 Pair 1: Generating hash for 95.4MB file with seed 7b31909908ff413061ce...
