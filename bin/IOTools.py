@@ -28,7 +28,7 @@ import sys
 import argparse
 import hashlib
 import RandomIO
-
+import binascii
 
 class IOTools(object):
 
@@ -87,7 +87,7 @@ Currently available commands include:
         with open(args.output or 'pairs.out', 'w') as f:
             for i in range(args.pairs or 1):
                 seed = os.urandom(args.length or 12)
-                hexseed = seed.encode('hex')
+                hexseed = binascii.hexlify(seed).decode('ascii')
                 if (args.verbose):
                     filesize = self._sizeformat(args.size)
                     print('Pair {0}: Generating hash for {1} file with seed {2}...'.format(
