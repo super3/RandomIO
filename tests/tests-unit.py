@@ -26,6 +26,7 @@ import os
 import redis
 import hashlib
 import subprocess
+import binascii
 
 import RandomIO
 
@@ -159,7 +160,7 @@ class TestRandomIO(unittest.TestCase):
         with open(output, 'r') as pairsfile:
             for line in pairsfile:
                 (hexseed, hash) = line.rstrip().split(' ')
-                seed = hexseed.decode('hex')
+                seed = binascii.unhexlify(hexseed)
                 testhash = hashlib.sha256(
                     RandomIO.RandomIO(seed).read(size)).hexdigest()
                 self.assertEqual(hash, testhash)
@@ -175,10 +176,10 @@ class TestRandomIO(unittest.TestCase):
             'cat {0} | redis-cli --pipe'.format(output), shell=True)
 
         for hexseed in r.scan_iter():
-            seed = hexseed.decode('hex')
+            seed = binascii.unhexlify(hexseed)
             testhash = hashlib.sha256(
                 RandomIO.RandomIO(seed).read(size)).hexdigest()
-            self.assertEqual(r.get(hexseed), testhash)
+            self.assertEqual(r.get(hexseed).decode('ascii'), testhash)
         os.remove(output)
         r.flushall()
 
