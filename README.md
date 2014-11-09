@@ -3,7 +3,7 @@ RandomIO
 
 [![Build Status](https://travis-ci.org/Storj/RandomIO.svg)](https://travis-ci.org/Storj/RandomIO) [![Coverage Status](https://img.shields.io/coveralls/Storj/RandomIO.svg)](https://coveralls.io/r/Storj/RandomIO?branch=master)
 
-`RandomIO` provides a readable interface for cryptographic quality random bytes.  It also allows generation of random files, dumping random bytes to files, and a `.read()` method for reading bytes.
+`RandomIO` provides a readable interface for cryptographic quality random bytes.  It also allows for generation of random files, dumping random bytes to files, and a `.read()` method for reading bytes.
 
 ### Installation
 
@@ -28,7 +28,7 @@ with open(path,'rb') as f:
 #   \xc8r\x83sh\xdfp\xb7\xbb\xc2\x04\x11\xda)\xc1*_\x01\xe5\xd8\x0f}N0"
 ```
 
-It is possible to specify the directory to generate the file in, or the file name
+It is possible to specify the directory to generate the file in, or the file name:
 
 ```python
 # specify a directory:
@@ -48,7 +48,7 @@ print(path)
 
 ### Byte generation
 
-Also allows reading random bytes and dumping those bytes to a file object.
+It is possible to read random bytes and dump those bytes to a file object:
 
 ```python
 import RandomIO
@@ -77,7 +77,8 @@ with open('path/to/file','rb') as f:
 
 ### CLI Tools
 
-RandomIO also includes a small set of CLI tools in IOTools.py
+RandomIO includes a small set of CLI tools in IOTools.py:
+
 ```
 $python IOTools.py --help
 usage: IOTools.py <command> [<args>]
@@ -95,6 +96,7 @@ optional arguments:
 ```
 
 Currently, `pairgen` is the only available tool:
+
 ```
 $ IOTools.py pairgen --help
 usage: IOTools.py [-h] [-l LENGTH] [-p PAIRS] [-o OUTPUT] [-v] size
@@ -122,6 +124,7 @@ service.
 ```
 
 Example output of `pairgens`:
+
 ```
 $ IOTools.py pairgen 100000000 -p5 -l 10 -o mypairs.txt -v
 Pair 0: Generating hash for 95.4MB file with seed 6a95c93fa9ca92d249d2...
@@ -138,7 +141,7 @@ done!
 
 Note that files are generated and hashed in memory. In addition, seeds displayed and/or written to file are hex-encoded. Actual seeds must be decoded before generating hash.
 
-When writing pairs to file using Redis mass insertion format, you can use the following command to import your pairs to Redis:
+When writing pairs to file using Redis's mass insertion format, you can use the following command to import your pairs to Redis:
 
 `cat pairs.out | redis-cli --pipe`
 
