@@ -159,8 +159,9 @@ class TestRandomIO(unittest.TestCase):
 
         with open(output, 'r') as pairsfile:
             for line in pairsfile:
-                (hexseed, hash) = line.rstrip().split(' ')
+                (hexseed, filesize, hash) = line.rstrip().split(' ')
                 seed = binascii.unhexlify(hexseed)
+		self.assertEqual(size, filesize)
                 testhash = hashlib.sha256(
                     RandomIO.RandomIO(seed).read(size)).hexdigest()
                 self.assertEqual(hash, testhash)
