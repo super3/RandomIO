@@ -97,7 +97,7 @@ Currently available commands include:
                 if (args.redis):
                     f.write(self._genredis(hexseed, hash))
                 else:
-                    f.write('{0} {1}\n'.format(hexseed, hash))
+                    f.write('{0} {1} {2}\n'.format(hexseed, args.size, hash))
                 if (args.verbose):
                     print('done!')
 
