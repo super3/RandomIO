@@ -161,7 +161,7 @@ class TestRandomIO(unittest.TestCase):
             for line in pairsfile:
                 (hexseed, filesize, hash) = line.rstrip().split(' ')
                 seed = binascii.unhexlify(hexseed)
-		self.assertEqual(size, filesize)
+		self.assertEqual(str(size), str(filesize))
                 testhash = hashlib.sha256(
                     RandomIO.RandomIO(seed).read(size)).hexdigest()
                 self.assertEqual(hash, testhash)
