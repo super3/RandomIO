@@ -85,6 +85,7 @@ usage: IOTools.py <command> [<args>]
 
 Currently available commands include:
    pairgen       Outputs a series of seed-hash pairs for files generated using the RandomIO library.
+   pairmatch     Outputs the hash of a file when given the seed and byte size.
 
 A series of command-line tools that make use of the RandomIO library.
 
@@ -95,11 +96,11 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-Currently, `pairgen` is the only available tool:
+Currently, `pairgen` and `pairmatch` are the only available tools:
 
 ```
 $ IOTools.py pairgen --help
-usage: IOTools.py [-h] [-l LENGTH] [-p PAIRS] [-o OUTPUT] [-v] size
+usage: IOTools.py pairgen [-h] [-l LENGTH] [-p PAIRS] [-o OUTPUT] [-v] size
 
 Output a series of seed-hash pairs for files generated in memory using the
 RandomIO library.
@@ -144,6 +145,24 @@ Note that files are generated and hashed in memory. In addition, seeds displayed
 When writing pairs to file using Redis's mass insertion format, you can use the following command to import your pairs to Redis:
 
 `cat pairs.out | redis-cli --pipe`
+
+```
+$ IOTools.py pairmatch --help
+usage: IOTools.py pairmatch [-h] size seed
+
+positional arguments:
+  size                  The target size of each file generated and hashed (in
+                        bytes).
+  seed                  The seed of the file that you want to generate a hash
+                        for.
+```
+
+Example output of `pairmatch`:
+
+```
+$ IOTools.py pairmatch 1000000 44f3c93879b0e9474d5e
+5f2a3116b9894e2bc9186452502251b70636be4cfb5a4e898f162962f22c7125
+```
 
 ### Performance
 

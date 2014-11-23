@@ -93,13 +93,26 @@ Currently available commands include:
                     print('Pair {0}: Generating hash for {1} file with seed {2}...'.format(
                         i, filesize, hexseed))
                 hash = hashlib.sha256(
-                    RandomIO.RandomIO(seed).read(args.size)).hexdigest()
+                    RandomIO.RandomIO(hexseed).read(args.size)).hexdigest()
                 if (args.redis):
                     f.write(self._genredis(hexseed, hash))
                 else:
                     f.write('{0} {1} {2}\n'.format(hexseed, args.size, hash))
                 if (args.verbose):
                     print('done!')
+
+    def pairmatch(self):
+        parser = argparse.ArgumentParser(description='Output the hash of a file when given the seed and byte size.',
+                                         epilog='This tool can be used to return hash challenges for a Storj uptick or downstream service.')
+        parser.add_argument(
+            'size', type=int, help='The target size of each file generated and hashed (in bytes).')
+        parser.add_argument(
+            'seed', type=str, help='The seed of the file that you want to generate a hash for.')
+        args = parser.parse_args(sys.argv[2:])
+
+        print hashlib.sha256(RandomIO.RandomIO(args.seed).read(args.size)).hexdigest()
+
+
 
 if __name__ == '__main__':
     IOTools()
