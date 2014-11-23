@@ -85,7 +85,8 @@ Currently available commands include:
         args = parser.parse_args(sys.argv[2:])
 
         with open(args.output or 'pairs.out', 'w') as f:
-            f.write('{0}\n'.format(args.size)
+            f.write('{0}\n'.format(args.size))
+
             for i in range(args.pairs or 1):
                 seed = os.urandom(args.length or 12)
                 hexseed = binascii.hexlify(seed).decode('ascii')
