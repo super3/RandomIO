@@ -156,9 +156,17 @@ class TestRandomIO(unittest.TestCase):
         size = 10485760
         subprocess.call(
             ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output])
+        firstline = True
 
         with open(output, 'r') as pairsfile:
             for line in pairsfile:
+
+                # check to make the file is equal to the byte size
+                if firstline:
+                    self.assertEqual(str(size), str(line))
+                    firstline = False
+                    continue
+
                 (hexseed, hash) = line.rstrip().split(' ')
                 seed = binascii.unhexlify(hexseed)
                 testhash = hashlib.sha256(
