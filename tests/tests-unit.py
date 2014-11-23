@@ -163,7 +163,7 @@ class TestRandomIO(unittest.TestCase):
 
                 # check to make the file is equal to the byte size
                 if firstline:
-                    self.assertEqual(str(size), str(line))
+                    self.assertEqual(str(size), str(line.rstrip()))
                     firstline = False
                     continue
 
