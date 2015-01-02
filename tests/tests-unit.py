@@ -215,38 +215,37 @@ class TestRandomIO(unittest.TestCase):
         
         self.assertEqual(p, 100)
 
-    # commenting this until it can be made cross platform
-    # def test_iotools_txt(self):
-        # output = 'txt_test.out'
-        # size = 10485760
-        # subprocess.call(
-            # ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output])
+    def test_iotools_txt(self):
+        output = 'txt_test.out'
+        size = 10485760
+        subprocess.call(
+            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output], shell=True)
 
-        # with open(output, 'r') as pairsfile:
-            # for line in pairsfile:
-                # (hexseed, hash) = line.rstrip().split(' ')
-                # seed = binascii.unhexlify(hexseed)
-                # testhash = hashlib.sha256(
-                    # RandomIO.RandomIO(seed).read(size)).hexdigest()
-                # self.assertEqual(hash, testhash)
-        # os.remove(output)
+        with open(output, 'r') as pairsfile:
+            for line in pairsfile:
+                (hexseed, hash) = line.rstrip().split(' ')
+                seed = binascii.unhexlify(hexseed)
+                testhash = hashlib.sha256(
+                    RandomIO.RandomIO(seed).read(size)).hexdigest()
+                self.assertEqual(hash, testhash)
+        os.remove(output)
 
-    # def test_iotools_redis(self):
-        # r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        # output = 'redis_test.out'
-        # size = 10485760
-        # subprocess.call(
-            # ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output, '--redis'])
-        # subprocess.call(
-            # 'cat {0} | redis-cli --pipe'.format(output), shell=True)
+    def test_iotools_redis(self):
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        output = 'redis_test.out'
+        size = 10485760
+        subprocess.call(
+            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output, '--redis'], shell=True)
+        subprocess.call(
+            'cat {0} | redis-cli --pipe'.format(output), shell=True)
 
-        # for hexseed in r.scan_iter():
-            # seed = binascii.unhexlify(hexseed)
-            # testhash = hashlib.sha256(
-                # RandomIO.RandomIO(seed).read(size)).hexdigest()
-            # self.assertEqual(r.get(hexseed).decode('ascii'), testhash)
-        # os.remove(output)
-        # r.flushall()
+        for hexseed in r.scan_iter():
+            seed = binascii.unhexlify(hexseed)
+            testhash = hashlib.sha256(
+                RandomIO.RandomIO(seed).read(size)).hexdigest()
+            self.assertEqual(r.get(hexseed).decode('ascii'), testhash)
+        os.remove(output)
+        r.flushall()
 
 if __name__ == '__main__':
     unittest.main()
