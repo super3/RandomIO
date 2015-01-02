@@ -30,6 +30,7 @@ from binascii import hexlify
 
 
 class RandomIO(object):
+
     def __init__(self, seed=None, size=None):
         """Initialization method
 
@@ -38,8 +39,8 @@ class RandomIO(object):
         :param size: the maximum size of the stream
         """
         self.blocksize = 16
-        self.ctrblocksize = self.blocksize//2
-        self.ctr = Counter.new(self.blocksize*8)
+        self.ctrblocksize = self.blocksize // 2
+        self.ctr = Counter.new(self.blocksize * 8)
         if (seed is None):
             seed = os.urandom(32)
         try:
@@ -54,37 +55,37 @@ class RandomIO(object):
         self.size = size
 
     def _read_raw(self, size):
-        """Reads directly from the random stream"""        
-        return self.aes.encrypt('\0'*size)
+        """Reads directly from the random stream"""
+        return self.aes.encrypt('\0' * size)
 
     def _clear_buffer(self):
         self.buffer = bytes()
         self.bufpos = 0
-        
+
     def _fill_buffer(self):
         # refill the buffer
         self.buffer = self._read_raw(self.ctrblocksize)
         self.bufpos = 0
-    
+
     def _seek_buffer(self, offset):
         self.bufpos = offset
-        
+
     def _read_buffer(self, size):
         """This reads size bytes from the buffer.
-        Will not read more than the size of the buffer in bytes, 
+        Will not read more than the size of the buffer in bytes,
         so may return less than size bytes
         """
         remaining = len(self.buffer) - self.bufpos
         if (size < remaining):
             # we can read directly from the buffer
-            ret = self.buffer[self.bufpos:self.bufpos+size]
+            ret = self.buffer[self.bufpos:self.bufpos + size]
             self.bufpos += len(ret)
             size -= len(ret)
         else:
             ret = self.buffer[self.bufpos:]
             self.bufpos += len(ret)
             size -= len(ret)
-        
+
         return ret
 
     def seek(self, offset, whence=os.SEEK_SET):
@@ -97,19 +98,19 @@ class RandomIO(object):
             if (self.size is None):
                 raise RuntimeError('Cannot seek from end of stream if size'
                                    ' is unknown.')
-            offset = self.size-offset            
-        
+            offset = self.size - offset
+
         # needs to reposition the counter so that we read the same bytes
         # counter increments on each block
         # calculate which block we are on
         self._clear_buffer()
-        
+
         counts = offset // self.ctrblocksize
         # set the counter
-        self.ctr = Counter.new(self.blocksize*8,
-                               initial_value=counts+1)
+        self.ctr = Counter.new(self.blocksize * 8,
+                               initial_value=counts + 1)
         self.aes = AES.new(self.key, AES.MODE_CTR, counter=self.ctr)
-        
+
         rem = offset % self.ctrblocksize
         if (rem > 0):
             self._fill_buffer()
@@ -132,7 +133,7 @@ class RandomIO(object):
                 raise RuntimeError('Stream size must be specified if bytes'
                                    ' to read is not.')
         return size
-        
+
     def read(self, size=None):
         """This object returns size random bytes.
 
@@ -147,23 +148,23 @@ class RandomIO(object):
 
         # if we are reading less than 8 bytes, this function will buffer so
         # that we are always reading from the block cipher in 8 byte increments
-        # we are doing all this buffering so we can seek the random stream using 
-        # counter control.  but the counter only incrememts every 8 bytes, unless
-        # we read less than 8 bytes.  to make this simpler, we want to always read
-        # 8 bytes from the block cipher encryption
-        
+        # we are doing all this buffering so we can seek the random stream
+        # using counter control.  but the counter only incrememts every 8 bytes
+        # unless we read less than 8 bytes.  to make this simpler, we want to
+        # always read 8 bytes from the block cipher encryption
+
         # read the rest of the buffer
         ret = self._read_buffer(size)
         size -= len(ret)
-        
+
         # buffer should now be empty
-        
+
         # read some raw bytes
         rem = size % self.ctrblocksize
-        raw_size = size-rem
+        raw_size = size - rem
         if (raw_size > 0):
             ret += self._read_raw(raw_size)
-        
+
         if (rem > 0):
             self._fill_buffer()
             ret += self._read_buffer(rem)
@@ -178,7 +179,7 @@ class RandomIO(object):
         :param size: number of bytes to dump.  if none, dumps the entire stream
         """
         size = self._interpret_size(size)
-        
+
         bufsz = self.bufsz
         while (size > 0):
             if (size < bufsz):
@@ -198,7 +199,8 @@ class RandomIO(object):
 
         Returns the path of the file
 
-        :param size: the number of bytes to dump. if none, dumps the entire stream
+        :param size: the number of bytes to dump. if none, dumps the entire
+            stream
         :param path: the file path, or directory
         :returns: the file path
         """
