@@ -38,5 +38,6 @@ setup(
     description='Random file and byte string generator',
     install_requires=[
         'pycrypto >= 2.6.1',
-    ]
+    ],
+    scripts=['bin/IOTools.py'],
 )
