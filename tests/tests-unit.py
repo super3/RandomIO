@@ -160,6 +160,13 @@ class TestRandomIO(unittest.TestCase):
         
         self.assertEqual(len(buf1), 10)
         
+    def test_read_zero(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        b = s1.read(0)
+        
+        self.assertEqual(len(b), 0)
+        
     def test_seek_beginning(self):
         s1 = RandomIO.RandomIO('seed string')
         
@@ -214,6 +221,14 @@ class TestRandomIO(unittest.TestCase):
         p = s1.tell()
         
         self.assertEqual(p, 100)
+        
+    def test_seek_end_not_possible(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        with self.assertRaises(RuntimeError) as ex:
+            s1.seek(100,os.SEEK_END)
+        
+        self.assertEqual(str(ex.exception), 'Cannot seek from end of stream if size is unknown.')
 
     def test_iotools_txt(self):
         output = 'txt_test.out'
