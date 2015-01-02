@@ -1,21 +1,17 @@
----
-  language: python
-  python:
-    - "2.7"
-    - "3.3"
-    - "3.4"
-  # command to install dependencies
-  services:
-    - redis-server
-  install:
-    - "pip install coverage flake8 redis coveralls ."
-  after_success:
-    - coveralls
-
-  # command to run tests
-  script:
-    - flake8 RandomIO/
-    - nosetests -v --with-coverage --cover-package=RandomIO tests/
-  # slack notification
-  notifications:
-    slack: storj:FnNNz3pWsGOc3bW65GmBSwCd
+language: python
+python:
+- 2.7
+- 3.3
+- 3.4
+services:
+- redis-server
+install:
+- pip install coverage coveralls
+after_success:
+- coveralls
+script:
+- coverage run setup.py test -a "--doctest-modules --pep8 -v tests/ RandomIO/"
+- coverage report -m --include=RandomIO/*,bin/*
+notifications:
+  slack:
+    secure: UfAeGUD0YUBwb3IS6aSGm+pSdkcrY3Wqqfru4e0E0ZdXs9hMyaQcw8hI7mQqPey1pOWCWw4i3npAb21p8JfPqvV+gMgbsIksla15kBPiej6d2zLwNplg3ewAn7SEY+pO2ItyGKc05uMELOgz83ntgPVW+vE1OeY34Eg7l5cmThM=
