@@ -219,7 +219,7 @@ class TestRandomIO(unittest.TestCase):
         output = 'txt_test.out'
         size = 10485760
         subprocess.call(
-            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output], shell=True)
+            ['python',os.path.join('bin','IOTools.py'), 'pairgen', str(size), '-p', '10', '-o', output])
 
         with open(output, 'r') as pairsfile:
             for line in pairsfile:
@@ -235,7 +235,7 @@ class TestRandomIO(unittest.TestCase):
         output = 'redis_test.out'
         size = 10485760
         subprocess.call(
-            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output, '--redis'], shell=True)
+            ['python',os.path.join('bin','IOTools.py'), 'pairgen', str(size), '-p', '10', '-o', output, '--redis'])
         subprocess.call(
             'cat {0} | redis-cli --pipe'.format(output), shell=True)
 
