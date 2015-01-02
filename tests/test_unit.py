@@ -86,9 +86,9 @@ class TestRandomIO(unittest.TestCase):
 
         with self.assertRaises(RuntimeError) as ex:
             s1.read()
-
-        self.assertEqual(str(ex.exception), 'Size must be greater than zero')
-
+            
+        self.assertEqual(str(ex.exception),'Stream size must be specified if bytes to read is not.')
+        
     def test_dump(self):
         s1 = RandomIO.RandomIO('seed string')
         s2 = RandomIO.RandomIO('seed string')
@@ -96,13 +96,13 @@ class TestRandomIO(unittest.TestCase):
         file1 = 'file1'
         file2 = 'file2'
 
-        with open(file1, 'wb') as f:
-            s1.dump(100, f)
-
-        with open(file2, 'wb') as f:
-            s2.dump(100, f)
-
-        with open(file1, 'rb') as f:
+        with open(file1,'wb') as f:
+            s1.dump(f,100)
+        
+        with open(file2,'wb') as f:
+            s2.dump(f,100)
+        
+        with open(file1,'rb') as f:
             contents1 = f.read()
 
         with open(file2, 'rb') as f:
@@ -153,12 +153,91 @@ class TestRandomIO(unittest.TestCase):
 
         os.remove(file1)
         os.remove(file2)
+        
+    def test_read_limit(self):
+        s1 = RandomIO.RandomIO('seed string', 100)
+        
+        s1.seek(90)
+        
+        buf1 = s1.read(100)
+        
+        self.assertEqual(len(buf1), 10)
+        
+    def test_read_zero(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        b = s1.read(0)
+        
+        self.assertEqual(len(b), 0)
+        
+    def test_seek_beginning(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        buf1 = s1.read(10)
+        
+        s1.seek(0)
+        
+        buf2 = s1.read(10)
+        
+        self.assertEqual(buf1, buf2)
+    
+    def test_seek_middle(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        s1.seek(10000)
+        
+        buf1 = s1.read(10)
+        
+        s1.seek(-10, os.SEEK_CUR)
+        
+        buf2 = s1.read(10)
+        
+        self.assertEqual(buf1, buf2)
+    
+    def test_seek_end(self):
+        s1 = RandomIO.RandomIO('seed string', 1000)
+        
+        s1.seek(900)
+        
+        buf1 = s1.read(10)
+        
+        s1.seek(100, os.SEEK_END)
+        
+        buf2 = s1.read(10)
+        
+        self.assertEqual(buf1, buf2)
+        
+    def test_tell_beginning(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        s1.read(100)
+        
+        p = s1.tell()
+        
+        self.assertEqual(p, 100)
+        
+    def test_tell_seek_parity(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        s1.seek(100)
+        
+        p = s1.tell()
+        
+        self.assertEqual(p, 100)
+        
+    def test_seek_end_not_possible(self):
+        s1 = RandomIO.RandomIO('seed string')
+        
+        with self.assertRaises(RuntimeError) as ex:
+            s1.seek(100,os.SEEK_END)
+        
+        self.assertEqual(str(ex.exception), 'Cannot seek from end of stream if size is unknown.')
 
     def test_iotools_txt(self):
         output = 'txt_test.out'
         size = 10485760
         subprocess.call(
-            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output])
+            ['python',os.path.join('bin','IOTools.py'), 'pairgen', str(size), '-p', '10', '-o', output])
 
         with open(output, 'r') as pairsfile:
             for line in pairsfile:
@@ -174,8 +253,12 @@ class TestRandomIO(unittest.TestCase):
         output = 'redis_test.out'
         size = 10485760
         subprocess.call(
+<<<<<<< HEAD:tests/test_unit.py
             ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output,
              '--redis'])
+=======
+            ['python',os.path.join('bin','IOTools.py'), 'pairgen', str(size), '-p', '10', '-o', output, '--redis'])
+>>>>>>> fbf68a902a81213893fe036692ca86cf11bf4d67:tests/tests-unit.py
         subprocess.call(
             'cat {0} | redis-cli --pipe'.format(output), shell=True)
 

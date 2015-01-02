@@ -30,38 +30,155 @@ from binascii import hexlify
 
 
 class RandomIO(object):
-    def __init__(self, seed=None):
+
+    def __init__(self, seed=None, size=None):
         """Initialization method
 
         :param seed: an object to use as the seed for the random number,
         generation.  should be hashable object
+        :param size: the maximum size of the stream
         """
+        self.blocksize = 16
+        self.ctrblocksize = self.blocksize // 2
+        self.ctr = Counter.new(self.blocksize * 8)
         if (seed is None):
             seed = os.urandom(32)
         try:
-            key = SHA256.new(seed).digest()
+            self.key = SHA256.new(seed).digest()
         except TypeError:
-            key = SHA256.new(str(seed).encode()).digest()
-        self.aes = AES.new(key, AES.MODE_CTR, counter=Counter.new(128))
+            self.key = SHA256.new(str(seed).encode()).digest()
+        self.aes = AES.new(self.key, AES.MODE_CTR, counter=self.ctr)
         self.bufsz = 65536
+        self.bufpos = 0
+        self.buffer = bytes()
+        self.offset = 0
+        self.size = size
 
-    def read(self, size=0):
+    def _read_raw(self, size):
+        """Reads directly from the random stream"""
+        return self.aes.encrypt('\0' * size)
+
+    def _clear_buffer(self):
+        self.buffer = bytes()
+        self.bufpos = 0
+
+    def _fill_buffer(self):
+        # refill the buffer
+        self.buffer = self._read_raw(self.ctrblocksize)
+        self.bufpos = 0
+
+    def _seek_buffer(self, offset):
+        self.bufpos = offset
+
+    def _read_buffer(self, size):
+        """This reads size bytes from the buffer.
+        Will not read more than the size of the buffer in bytes,
+        so may return less than size bytes
+        """
+        remaining = len(self.buffer) - self.bufpos
+        if (size < remaining):
+            # we can read directly from the buffer
+            ret = self.buffer[self.bufpos:self.bufpos + size]
+            self.bufpos += len(ret)
+            size -= len(ret)
+        else:
+            ret = self.buffer[self.bufpos:]
+            self.bufpos += len(ret)
+            size -= len(ret)
+
+        return ret
+
+    def seek(self, offset, whence=os.SEEK_SET):
+        """Seeks to the offset specified.  Offsets must be specified absolutely
+        from the beginning of the stream
+        """
+        if (whence == os.SEEK_CUR):
+            offset += self.offset
+        elif (whence == os.SEEK_END):
+            if (self.size is None):
+                raise RuntimeError('Cannot seek from end of stream if size'
+                                   ' is unknown.')
+            offset = self.size - offset
+
+        # needs to reposition the counter so that we read the same bytes
+        # counter increments on each block
+        # calculate which block we are on
+        self._clear_buffer()
+
+        counts = offset // self.ctrblocksize
+        # set the counter
+        self.ctr = Counter.new(self.blocksize * 8,
+                               initial_value=counts + 1)
+        self.aes = AES.new(self.key, AES.MODE_CTR, counter=self.ctr)
+
+        rem = offset % self.ctrblocksize
+        if (rem > 0):
+            self._fill_buffer()
+            self._seek_buffer(rem)
+
+        self.offset = offset
+
+    def tell(self):
+        """Returns the byte offset in the random stream.
+        """
+        return self.offset
+
+    def _interpret_size(self, size):
+        if (self.size is not None):
+            if (size is None or self.offset + size > self.size):
+                size = self.size - self.offset
+        else:
+            if (size is None):
+                # we don't know how much to return
+                raise RuntimeError('Stream size must be specified if bytes'
+                                   ' to read is not.')
+        return size
+
+    def read(self, size=None):
         """This object returns size random bytes.
 
-        :param size: must be a non-negative number of bytes to output
+        :param size: the number of bytes to read.  if none, returns the entire
+            stream
         :returns: size random bytes
         """
+        size = self._interpret_size(size)
+
         if (size < 1):
-            raise RuntimeError('Size must be greater than zero')
+            return bytes()
 
-        return self.aes.encrypt('\0'*size)
+        # if we are reading less than 8 bytes, this function will buffer so
+        # that we are always reading from the block cipher in 8 byte increments
+        # we are doing all this buffering so we can seek the random stream
+        # using counter control.  but the counter only incrememts every 8 bytes
+        # unless we read less than 8 bytes.  to make this simpler, we want to
+        # always read 8 bytes from the block cipher encryption
 
-    def dump(self, size, fp):
+        # read the rest of the buffer
+        ret = self._read_buffer(size)
+        size -= len(ret)
+
+        # buffer should now be empty
+
+        # read some raw bytes
+        rem = size % self.ctrblocksize
+        raw_size = size - rem
+        if (raw_size > 0):
+            ret += self._read_raw(raw_size)
+
+        if (rem > 0):
+            self._fill_buffer()
+            ret += self._read_buffer(rem)
+
+        self.offset += len(ret)
+        return ret
+
+    def dump(self, fp, size=None):
         """This object dump size random bytes into a file specified with path.
 
-        :param size: number of bytes to dump
         :param fp: a .write() supporting file like object to dump size bytes
+        :param size: number of bytes to dump.  if none, dumps the entire stream
         """
+        size = self._interpret_size(size)
 
         bufsz = self.bufsz
         while (size > 0):
@@ -70,7 +187,7 @@ class RandomIO(object):
             fp.write(self.read(bufsz))
             size -= bufsz
 
-    def genfile(self, size, path=''):
+    def genfile(self, size=None, path=''):
         """This object generates a file of length size bytes in the location
         path
 
@@ -82,7 +199,8 @@ class RandomIO(object):
 
         Returns the path of the file
 
-        :param size: the number of bytes to dump
+        :param size: the number of bytes to dump. if none, dumps the entire
+            stream
         :param path: the file path, or directory
         :returns: the file path
         """
@@ -90,6 +208,6 @@ class RandomIO(object):
             path = os.path.join(path, hexlify(os.urandom(16)).decode('utf-8'))
 
         with open(path, 'wb') as f:
-            self.dump(size, f)
+            self.dump(f, size)
 
         return path
