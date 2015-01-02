@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # The MIT License (MIT)
 #
@@ -21,23 +23,61 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
 from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
-with open('RandomIO/version.py','r') as f:
+with open('RandomIO/version.py', 'r') as f:
     exec(f.read())
+
+LONG_DESCRIPTION = open('README.md').read()
+
+install_requirements = [
+    'pycrypto >= 2.6.1'
+]
+
+test_requirements = [
+    'redis>=2.10.3',
+    'pytest>=2.6.4',
+    'pytest-pep8',
+    'pytest-cache',
+    'coveralls'
+]
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # Import PyTest here because outside, the eggs are not loaded.
+        import pytest
+        import sys
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
 
 setup(
     name='RandomIO',
     version=__version__,
-    packages=['RandomIO'],
     url='https://github.com/Storj/RandomIO',
-    license='MIT',
-    author='William James, Storj Labs',
-    author_email='info@storj.io',
-    description='Random file and byte string generator',
-    install_requires=[
-        'pycrypto >= 2.6.1',
-    ],
+    download_url='https://github.com/storj/RandomIO/tarball/{}'.format(
+        __version__),
+    license=open('LICENSE').read(),
+    author='William James',
+    author_email='jameswt@gmail.com',
+    description='Random file and byte string generator.',
+    long_description=LONG_DESCRIPTION,
+    packages=['RandomIO'],
+    cmdclass={'test': PyTest},
+    install_requires=install_requirements,
+    tests_require=test_requirements,
+    keywords=['storj', 'randomIO', 'random generator'],
     scripts=['bin/IOTools.py'],
 )
