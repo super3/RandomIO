@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # The MIT License (MIT)
 #
@@ -46,7 +48,8 @@ class TestRandomIO(unittest.TestCase):
         self.assertEqual(len(b), 100)
 
         self.assertEqual(
-            RandomIO.RandomIO(123456).read(100), RandomIO.RandomIO(123456).read(100))
+            RandomIO.RandomIO(123456).read(100),
+            RandomIO.RandomIO(123456).read(100))
         self.assertEqual(RandomIO.RandomIO(b'byte string seed').read(
             100), RandomIO.RandomIO(b'byte string seed').read(100))
         self.assertEqual(RandomIO.RandomIO(1.23456).read(
@@ -171,7 +174,8 @@ class TestRandomIO(unittest.TestCase):
         output = 'redis_test.out'
         size = 10485760
         subprocess.call(
-            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output, '--redis'])
+            ['IOTools.py', 'pairgen', str(size), '-p', '10', '-o', output,
+             '--redis'])
         subprocess.call(
             'cat {0} | redis-cli --pipe'.format(output), shell=True)
 
